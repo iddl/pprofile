@@ -51,10 +51,14 @@ module.exports = Cprofile =
 
     return gutter
 
-  loadStats: (path, callback) ->
-    fs.readFile path, "utf8", (err, data) ->
-        callback(JSON.parse(data))
+  loadStats: (stream, callback) ->
+    content = ''
+    stream.on 'data', (buf) ->
+      content += buf.toString()
 
+    stream.on 'end', (buf) ->
+      callback(JSON.parse(content));
+      
   addMarkers: (editor, stats) ->
     stats = stats || {}
     self = this
@@ -66,17 +70,21 @@ module.exports = Cprofile =
 
   toggle: ->
     console.log 'Cprofile was toggled!'
-    # self = this
+    self = this
     #
-    # editor = atom.workspace.getActivePaneItem()
-    # filename = editor.buffer.file.path
+    editor = atom.workspace.getActivePaneItem()
+    filename = editor.buffer.file.path
     #
-    # @loadStats '/home/ivan/tmp/staging_profile.json', (stats) ->
-    #     self.addGutter editor
-    #     self.addMarkers editor, stats['/usr/local/lib/python2.7/dist-packages/dogweb/controllers/api/overview.py']
+
+    PyRunner = runners.pylprof
+    prInstance = new PyRunner()
+    stre = prInstance.run()
+
+    @loadStats stre, (stats) ->
+        self.addGutter editor
+        self.addMarkers editor, stats['/usr/local/lib/python2.7/dist-packages/dogweb/controllers/api/overview.py']
 
 
-    console.log(runners)
 
     #
     # if @modalPanel.isVisible()

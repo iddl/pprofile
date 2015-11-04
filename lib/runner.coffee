@@ -8,7 +8,8 @@ class PyLprof extends Runner
   constructor: ->
     super("Guitar")
 
-  execute: ->
+  run: ->
+    return fs.createReadStream('/home/ivan/tmp/staging_profile.json')
 
 
 module.exports = {
