@@ -1,0 +1,19 @@
+{
+  "name": "cprofile",
+  "main": "./lib/cprofile",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "keywords": [
+  ],
+  "activationCommands": {
+    "atom-workspace": "cprofile:toggle"
+  },
+  "repository": "https://github.com/atom/cprofile",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+    "underscore-plus" : "*"
+  }
+}
