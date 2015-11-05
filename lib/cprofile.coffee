@@ -47,26 +47,18 @@ module.exports = Cprofile =
   addGutter: (editor) ->
     gutter = _.findWhere editor.getGutters(), {name : 'cprofile'}
     if !gutter
-        gutter = editor.addGutter {'name' : 'cprofile', 'priority' : 100, 'style'}
+      gutter = editor.addGutter {'name' : 'cprofile', 'priority' : 100, 'style'}
 
     return gutter
 
-  loadStats: (stream, callback) ->
-    content = ''
-    stream.on 'data', (buf) ->
-      content += buf.toString()
-
-    stream.on 'end', (buf) ->
-      callback(JSON.parse(content));
-      
   addMarkers: (editor, stats) ->
     stats = stats || {}
     self = this
     _.each stats, (values, line) ->
-        lineNumber = (parseInt line,10) - 1
-        lineStats = _.first values
-        text = parseFloat(lineStats.timing[2].toFixed(8))
-        self.addMarker editor, [[lineNumber, 0], [lineNumber, Infinity]], text
+      lineNumber = (parseInt line,10) - 1
+      lineStats = _.first values
+      text = parseFloat(lineStats.timing[2].toFixed(8))
+      self.addMarker editor, [[lineNumber, 0], [lineNumber, Infinity]], text
 
   toggle: ->
     console.log 'Cprofile was toggled!'
@@ -78,11 +70,11 @@ module.exports = Cprofile =
 
     PyRunner = runners.pylprof
     prInstance = new PyRunner()
+    
     stre = prInstance.run()
-
-    @loadStats stre, (stats) ->
-        self.addGutter editor
-        self.addMarkers editor, stats['/usr/local/lib/python2.7/dist-packages/dogweb/controllers/api/overview.py']
+    .then (stats) ->
+      self.addGutter editor
+      self.addMarkers editor, stats['/usr/local/lib/python2.7/dist-packages/dogweb/controllers/api/overview.py']
 
 
 
