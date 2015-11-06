@@ -70,11 +70,11 @@ module.exports = Cprofile =
 
     PyRunner = runners.pylprof
     prInstance = new PyRunner()
-    
+
     stre = prInstance.run()
     .then (stats) ->
       self.addGutter editor
-      self.addMarkers editor, stats['/usr/local/lib/python2.7/dist-packages/dogweb/controllers/api/overview.py']
+      self.addMarkers editor, stats[filename]
 
 
 

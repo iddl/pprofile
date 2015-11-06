@@ -1,9 +1,10 @@
 import pickle
 import json
+import sys
 
 results = {}
 
-with open('/home/ivan/tmp/stats.lprof', 'rb') as f:
+with open(sys.argv[1], 'rb') as f:
     stats = pickle.load(f)
     unit = stats.unit
     for function, timings in stats.timings.iteritems():
