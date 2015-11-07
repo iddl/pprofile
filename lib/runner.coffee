@@ -12,29 +12,27 @@ class PyLprof extends Runner
 
   create_command: (cmd, file) ->
     deferred = Q.defer()
-
-    cmd = """
-    from dd.utils.dtime import delta_string_to_seconds
-    from line_profiler import LineProfiler
-    lp = LineProfiler()
-    lp.add_function(delta_string_to_seconds)
-    lp.enable_by_count()
-    delta_string_to_seconds('1s')
-    lp.print_stats()
-    lp.dump_stats('/home/vagrant/workspace/dogweb/stats.lprof')
-    exit()
-    """
     cmdfile = '/home/ivan/local/vm/dogweb/cmd.txt'
+
+    # from dd.utils.dtime import delta_string_to_seconds
+    # from line_profiler import LineProfiler
+    # lp = LineProfiler()
+    # lp.add_function(delta_string_to_seconds)
+    # lp.enable_by_count()
+    # delta_string_to_seconds('1s')
+    # lp.print_stats()
+    # lp.dump_stats('/home/vagrant/workspace/dogweb/stats.lprof')
+    # exit()
 
     fs.writeFile cmdfile, cmd, (err) ->
       deferred.resolve cmdfile
 
     return deferred.promise
 
-  profile: ->
+  profile: (cmd) ->
     deferred = Q.defer()
 
-    return @create_command(1,2).then (cmdfile) ->
+    return @create_command(cmd,2).then (cmdfile) ->
       child = spawn '/usr/bin/vagrant', ["ssh", "-c", "source ./dogweb/python/bin/activate; cd ./workspace/dogweb; paster shell development.ini < cmd.txt"], {
         cwd : '/home/ivan/local/personal-chef'
       }
@@ -45,9 +43,6 @@ class PyLprof extends Runner
       child.on 'exit', (code) =>
         deferred.resolve('/home/ivan/local/vm/dogweb/stats.lprof')
       return deferred.promise
-
-  convert: (json, oldroot, newroot) ->
-    json.replace(oldroot, newroot)
 
   convert: (filename) ->
     deferred = Q.defer()
@@ -60,11 +55,11 @@ class PyLprof extends Runner
       deferred.resolve JSON.parse(content)
     return deferred.promise
 
-  run: ->
+  run: (cmd) ->
     deferred = Q.defer()
     self = this
 
-    return @profile().then self.convert
+    return @profile(cmd).then self.convert
 
 
 

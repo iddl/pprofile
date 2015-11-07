@@ -15,8 +15,8 @@ module.exports = Cprofile =
     @cprofileView = new CprofileView(state.cprofileViewState)
     @modalPanel = atom.workspace.addModalPanel(item: @cprofileView.getElement(), visible: false)
 
-    @launcherview = new LauncherView()
-    @modalPanel = atom.workspace.addBottomPanel(item: @launcherview, visible: true)
+    @launcherview = new LauncherView onRunCommand : @run.bind(this)
+    atom.workspace.addBottomPanel(item: @launcherview, visible: true)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -37,7 +37,7 @@ module.exports = Cprofile =
     marker = editor.markBufferRange lines
 
     marker.emitter.on 'cprofile:reload', ->
-        @destroy
+      marker.destroy()
 
     cc = ['good', 'warn', 'bad']
     opts.className = cc[Math.floor(Math.random() * (3))]
@@ -64,23 +64,21 @@ module.exports = Cprofile =
       text = parseFloat(lineStats.timing[2].toFixed(8))
       self.addMarker editor, [[lineNumber, 0], [lineNumber, Infinity]], text
 
-  toggle: ->
-    console.log 'Cprofile was toggled!'
+  run: (cmd) ->
     self = this
-    #
     editor = atom.workspace.getActivePaneItem()
     filename = editor.buffer.file.path
-    #
-
     PyRunner = runners.pylprof
     prInstance = new PyRunner()
+    stre = prInstance.run(cmd)
+    .then (stats) ->
+      self.addGutter editor
+      editor.getMarkers().forEach (marker) ->
+        marker.emitter.emit 'cprofile:reload'
+      self.addMarkers editor, stats[filename]
 
-    # stre = prInstance.run()
-    # .then (stats) ->
-    #   self.addGutter editor
-    #   self.addMarkers editor, stats[filename]
-
-
+  toggle: ->
+    console.log 'Cprofile was toggled!'
 
     #
     # if @modalPanel.isVisible()
