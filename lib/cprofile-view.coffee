@@ -1,3 +1,5 @@
+{View} = require 'space-pen'
+
 module.exports =
 class CprofileView
   constructor: (serializedState) ->
@@ -10,6 +12,7 @@ class CprofileView
     message.textContent = "The Cprofile package is Alive! It's ALIVE!"
     message.classList.add('message')
     @element.appendChild(message)
+
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->

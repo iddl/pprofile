@@ -1,4 +1,5 @@
 CprofileView = require './cprofile-view'
+LauncherView = require './launcher-view'
 _ = require 'underscore-plus'
 fs = require('fs');
 runners = require('./runner')
@@ -13,6 +14,9 @@ module.exports = Cprofile =
   activate: (state) ->
     @cprofileView = new CprofileView(state.cprofileViewState)
     @modalPanel = atom.workspace.addModalPanel(item: @cprofileView.getElement(), visible: false)
+
+    @launcherview = new LauncherView()
+    @modalPanel = atom.workspace.addBottomPanel(item: @launcherview, visible: true)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -71,10 +75,10 @@ module.exports = Cprofile =
     PyRunner = runners.pylprof
     prInstance = new PyRunner()
 
-    stre = prInstance.run()
-    .then (stats) ->
-      self.addGutter editor
-      self.addMarkers editor, stats[filename]
+    # stre = prInstance.run()
+    # .then (stats) ->
+    #   self.addGutter editor
+    #   self.addMarkers editor, stats[filename]
 
 
 

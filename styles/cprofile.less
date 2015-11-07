@@ -36,3 +36,41 @@ atom-text-editor::shadow .gutter[gutter-name*="cprofile"] {
         // }
     }
 }
+
+.cprofile-launcher{
+    padding: 0.375em;
+
+    atom-text-editor{
+        height: 100px;
+    }
+
+    .input-block{
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        min-width: 200px;
+    }
+
+    .input-block-item {
+        padding: 0.375em;
+        flex: 1 1 12em;
+    }
+
+    .input-block-item--flex{
+        flex: 100 1 25em;
+    }
+
+    .btn-group,
+    .btn{
+        flex: 1;
+    }
+
+    .btn-group{
+        display: flex;
+
+        &.btn-group-run{
+            flex: 1 1 120px;
+        }
+    }
+
+}
