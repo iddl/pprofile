@@ -12,7 +12,8 @@ module.exports = Cprofile =
 
   activate: (state) ->
     @launcherview = new LauncherView onRunCommand : @run.bind(this)
-    atom.workspace.addBottomPanel(item: @launcherview, visible: true)
+    atom.workspace.addBottomPanel(item: @launcherview)
+    @launcherview.hide()
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -39,7 +40,9 @@ module.exports = Cprofile =
       self.statsViewer.render(editor, stats[filename])
 
   toggle: ->
+    editor = atom.workspace.getActivePaneItem()
     if @launcherview.isVisible()
       @launcherview.hide()
+      @statsViewer.clear(editor)
     else
       @launcherview.show()

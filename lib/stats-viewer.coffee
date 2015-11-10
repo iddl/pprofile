@@ -12,6 +12,9 @@ class StatsViewer
     marker.emitter.on 'cprofile:reload', ->
       marker.destroy()
 
+    marker.emitter.on 'cprofile:destroy', ->
+      marker.destroy()
+
     cc = ['good', 'warn', 'bad']
     opts.className = cc[Math.floor(Math.random() * (3))]
 
@@ -43,5 +46,12 @@ class StatsViewer
     editor.getMarkers().forEach (marker) ->
       marker.emitter.emit 'cprofile:reload'
     self.addMarkers editor, stats
+
+  clear: (editor) ->
+    editor.getMarkers().forEach (marker) ->
+      marker.emitter.emit 'cprofile:destroy'
+    gutter = _.findWhere editor.getGutters(), {name : 'cprofile'}
+    if gutter
+      gutter.destroy()
 
 module.exports = StatsViewer
