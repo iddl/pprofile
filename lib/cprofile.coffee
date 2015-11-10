@@ -1,20 +1,16 @@
-CprofileView = require './cprofile-view'
+fs = require 'fs'
+
 LauncherView = require './launcher-view'
-_ = require 'underscore-plus'
-fs = require('fs');
-runners = require('./runner')
+StatsViewer = require './stats-viewer'
+runners = require './pylprof/runner'
 
 {CompositeDisposable} = require 'atom'
 
 module.exports = Cprofile =
-  cprofileView: null
-  modalPanel: null
-  subscriptions: null
+  subscriptions : null
+  statsViewer : new StatsViewer()
 
   activate: (state) ->
-    @cprofileView = new CprofileView(state.cprofileViewState)
-    @modalPanel = atom.workspace.addModalPanel(item: @cprofileView.getElement(), visible: false)
-
     @launcherview = new LauncherView onRunCommand : @run.bind(this)
     atom.workspace.addBottomPanel(item: @launcherview, visible: true)
 
@@ -32,38 +28,6 @@ module.exports = Cprofile =
   serialize: ->
     cprofileViewState: @cprofileView.serialize()
 
-  addMarker: (editor, lines, text, opts) ->
-    opts = opts || {}
-    marker = editor.markBufferRange lines
-
-    marker.emitter.on 'cprofile:reload', ->
-      marker.destroy()
-
-    cc = ['good', 'warn', 'bad']
-    opts.className = cc[Math.floor(Math.random() * (3))]
-
-    item = document.createElement 'div'
-    item.className = 'line-stats ' + (opts.className || '')
-    item.innerHTML = text
-
-    editor.decorateMarker marker, {type: 'gutter', gutterName: 'cprofile', class: 'profile-gutter', item: item}
-
-  addGutter: (editor) ->
-    gutter = _.findWhere editor.getGutters(), {name : 'cprofile'}
-    if !gutter
-      gutter = editor.addGutter {'name' : 'cprofile', 'priority' : 100, 'style'}
-
-    return gutter
-
-  addMarkers: (editor, stats) ->
-    stats = stats || {}
-    self = this
-    _.each stats, (values, line) ->
-      lineNumber = (parseInt line,10) - 1
-      lineStats = _.first values
-      text = parseFloat(lineStats.timing[2].toFixed(8))
-      self.addMarker editor, [[lineNumber, 0], [lineNumber, Infinity]], text
-
   run: (cmd) ->
     self = this
     editor = atom.workspace.getActivePaneItem()
@@ -72,16 +36,10 @@ module.exports = Cprofile =
     prInstance = new PyRunner()
     stre = prInstance.run(cmd)
     .then (stats) ->
-      self.addGutter editor
-      editor.getMarkers().forEach (marker) ->
-        marker.emitter.emit 'cprofile:reload'
-      self.addMarkers editor, stats[filename]
+      self.statsViewer.render(editor, stats[filename])
 
   toggle: ->
-    console.log 'Cprofile was toggled!'
-
-    #
-    # if @modalPanel.isVisible()
-    #   @modalPanel.hide()
-    # else
-    #   @modalPanel.show()
+    if @launcherview.isVisible()
+      @launcherview.hide()
+    else
+      @launcherview.show()

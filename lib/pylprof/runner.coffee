@@ -1,11 +1,9 @@
 fs = require('fs')
 Q = require('q')
 spawn = require('child_process').spawn
+ProfileRunner = require('../profile-runner')
 
-class Runner
-  constructor: (@type)->
-
-class PyLprof extends Runner
+class PyLprof extends ProfileRunner
 
   constructor: ->
     super()
@@ -13,16 +11,6 @@ class PyLprof extends Runner
   create_command: (cmd, file) ->
     deferred = Q.defer()
     cmdfile = '/home/ivan/local/vm/dogweb/cmd.txt'
-
-    # from dd.utils.dtime import delta_string_to_seconds
-    # from line_profiler import LineProfiler
-    # lp = LineProfiler()
-    # lp.add_function(delta_string_to_seconds)
-    # lp.enable_by_count()
-    # delta_string_to_seconds('1s')
-    # lp.print_stats()
-    # lp.dump_stats('/home/vagrant/workspace/dogweb/stats.lprof')
-    # exit()
 
     fs.writeFile cmdfile, cmd, (err) ->
       deferred.resolve cmdfile
@@ -47,7 +35,7 @@ class PyLprof extends Runner
   convert: (filename) ->
     deferred = Q.defer()
     content = ''
-    child = spawn '/usr/bin/python', ['/home/ivan/github/cprofile/lib/pickletojson.py', filename]
+    child = spawn '/usr/bin/python', ['/home/ivan/github/cprofile/lib/pylprof/pickletojson.py', filename]
     child.stdout.on 'data', (buf) ->
       content += buf.toString()
     child.on 'exit', (buf) ->
