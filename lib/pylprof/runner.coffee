@@ -45,6 +45,8 @@ class PyLprof extends ProfileRunner
         curAttempt += 1
     ), 1000
 
+    child.stderr.on 'data', ->
+
     child.stdout.on 'data', (data) ->
       if data.toString().indexOf(dialtoneKey) isnt -1
         clearInterval dialtoneInterval
@@ -55,9 +57,7 @@ class PyLprof extends ProfileRunner
   profile: (cmd) ->
     deferred = Q.defer()
 
-    child = spawn '/usr/bin/vagrant', ["ssh", "-c", "source ./dogweb/python/bin/activate; cd ./workspace/dogweb; paster shell development.ini"], {
-      cwd : '/home/ivan/local/personal-chef'
-    }
+    child = spawn '/usr/bin/ssh', ["-p", "2222", "vagrant@127.0.0.1", "-i", "/home/ivan/.vagrant.d/insecure_private_key", "-t", "source ./dogweb/python/bin/activate; cd ./workspace/dogweb; paster shell development.ini"]
 
     cmd = [cmd, @dumpStatsCmd].join('\n')
 
@@ -69,7 +69,6 @@ class PyLprof extends ProfileRunner
       child.stdout.on 'data', (data) ->
         # inefficient but will do for now
         content += data.toString()
-        # console.log(data.toString())
       child.on 'exit', (code) =>
         m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
         m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
