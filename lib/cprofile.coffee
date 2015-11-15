@@ -37,7 +37,12 @@ module.exports = Cprofile =
     prInstance = new PyRunner()
     stre = prInstance.run(cmd)
     .then (stats) ->
-      self.statsViewer.render(editor, stats[filename])
+      self.launcherview.hide()
+      atom.notifications.addSuccess 'Profile complete'
+      self.statsViewer.render editor, stats[filename]
+    .catch (err) ->
+      atom.notifications.addError err
+      @launcherview.show()
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()

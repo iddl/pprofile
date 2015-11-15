@@ -8,26 +8,32 @@ class PyLprof extends ProfileRunner
   constructor: ->
     super()
 
-  dumpStatsCmd : """
-  import json
-  stats = lp.get_stats()
-  unit = stats.unit
-  results = {}
-  for function, timings in stats.timings.iteritems():
-      module, line, fname = function
-      results[module] = {}
-      for sample in timings:
-          linenumber, ncalls, timing = sample
-          if not results[module].get(linenumber):
-              results[module][linenumber] = []
-          results[module][linenumber].append({
-              'name' : '',
-              'timing' : [ncalls, timing*unit, timing*unit*ncalls]
-          })\n\n
-  jsondump = json.dumps(results)
-  print('@@@STATSDUMPSTART@@@' + jsondump + '@@@STATSDUMPEND@@@')
-  exit()\n
-  """
+  commands : {
+      importProfiler : """
+      from line_profiler import LineProfiler
+      lp = LineProfiler()
+      """,
+      dumpStats : """
+      import json
+      stats = lp.get_stats()
+      unit = stats.unit
+      results = {}
+      for function, timings in stats.timings.iteritems():
+          module, line, fname = function
+          results[module] = {}
+          for sample in timings:
+              linenumber, ncalls, timing = sample
+              if not results[module].get(linenumber):
+                  results[module][linenumber] = []
+              results[module][linenumber].append({
+                  'name' : '',
+                  'timing' : [ncalls, timing*unit, timing*unit*ncalls]
+              })\n\n
+      jsondump = json.dumps(results)
+      print('@@@STATSDUMPSTART@@@' + jsondump + '@@@STATSDUMPEND@@@')
+      exit()\n
+      """
+  }
 
   dialtone: (child) ->
     maxAttempts = 10
@@ -59,7 +65,11 @@ class PyLprof extends ProfileRunner
 
     child = spawn '/usr/bin/ssh', ["-p", "2222", "vagrant@127.0.0.1", "-i", "/home/ivan/.vagrant.d/insecure_private_key", "-t", "source ./dogweb/python/bin/activate; cd ./workspace/dogweb; paster shell development.ini"]
 
-    cmd = [cmd, @dumpStatsCmd].join('\n')
+    cmd = [
+        @commands.importProfiler,
+        cmd,
+        @commands.dumpStats
+    ].join('\n')
 
     content = ''
     @dialtone(child).then ->
@@ -70,10 +80,14 @@ class PyLprof extends ProfileRunner
         # inefficient but will do for now
         content += data.toString()
       child.on 'exit', (code) =>
-        m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
-        m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
-        stats = JSON.parse(m)
-        deferred.resolve(stats)
+        try
+          m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
+          m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
+          stats = JSON.parse(m)
+          deferred.resolve(stats)
+        catch error
+          deferred.reject('Error parsing statistics')
+
       return deferred.promise
 
   run: (cmd) ->
