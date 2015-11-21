@@ -2,6 +2,7 @@ fs = require 'fs'
 
 LauncherView = require './launcher-view'
 StatsViewer = require './stats-viewer'
+StatusViewer = require './status-viewer'
 runners = require './pylprof/runner'
 
 {CompositeDisposable} = require 'atom'
@@ -9,6 +10,7 @@ runners = require './pylprof/runner'
 module.exports = Cprofile =
   subscriptions : null
   statsViewer : new StatsViewer()
+  statusViewer : new StatusViewer()
 
   activate: (state) ->
     @launcherview = new LauncherView onRunCommand : @run.bind(this)
@@ -38,10 +40,10 @@ module.exports = Cprofile =
     stre = prInstance.run(cmd)
     .then (stats) ->
       self.launcherview.hide()
-      atom.notifications.addSuccess 'Profile complete'
+      @statusViewer.render(status : 'success')
       self.statsViewer.render editor, stats[filename]
     .catch (err) ->
-      atom.notifications.addError err
+      @statusViewer.render({status : 'error', message : err})
       @launcherview.show()
 
   toggle: ->
