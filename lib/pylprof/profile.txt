@@ -7,3 +7,5 @@ delta_string_to_seconds('1s')
 lp.print_stats()
 lp.dump_stats('/home/vagrant/workspace/dogweb/stats.lprof')
 exit()
+
+"-p", "2222", "vagrant@127.0.0.1", "-i", "/home/ivan/.vagrant.d/insecure_private_key", "-t", "source ./dogweb/python/bin/activate; cd ./workspace/dogweb; paster shell development.ini"

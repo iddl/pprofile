@@ -1,12 +1,22 @@
 fs = require('fs')
 Q = require('q')
 spawn = require('child_process').spawn
+_ = require('underscore-plus')
 ProfileRunner = require('../profile-runner')
 
 class PyLprof extends ProfileRunner
 
   constructor: ->
     super()
+
+  @config: {
+    shellCmd:
+      title: 'Shell command'
+      type: 'array'
+      default: ['/usr/bin/python']
+      items:
+        type: 'string'
+  }
 
   commands : {
       importProfiler : """
@@ -47,7 +57,12 @@ class PyLprof extends ProfileRunner
         clearInterval dialtoneInterval
         deferred.reject()
       else
-        child.stdin.write dialtoneCmd for i in [0..100]
+        try
+          child.stdin.write dialtoneCmd for i in [0..100]
+        catch err
+          clearInterval dialtoneInterval
+          deferred.reject(err)
+
         curAttempt += 1
     ), 1000
 
@@ -63,7 +78,13 @@ class PyLprof extends ProfileRunner
   profile: (cmd) ->
     deferred = Q.defer()
 
-    child = spawn '/usr/bin/ssh', ["-p", "2222", "vagrant@127.0.0.1", "-i", "/home/ivan/.vagrant.d/insecure_private_key", "-t", "source ./dogweb/python/bin/activate; cd ./workspace/dogweb; paster shell development.ini"]
+    shellCmd = atom.config.get('cprofile.shellCmd')
+    exec = _.first shellCmd
+    args = _.rest shellCmd
+    debugger
+    child = spawn exec, args
+
+
 
     cmd = [
         @commands.importProfiler,
@@ -87,17 +108,14 @@ class PyLprof extends ProfileRunner
           deferred.resolve(stats)
         catch error
           deferred.reject('Error parsing statistics')
+    .catch (err) ->
+      deferred.reject(err)
 
-      return deferred.promise
+    return deferred.promise
 
   run: (cmd) ->
     deferred = Q.defer()
-    self = this
-
+    debugger
     return @profile(cmd)
 
-
-
-module.exports = {
-    pylprof : PyLprof
-}
+module.exports = PyLprof

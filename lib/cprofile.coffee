@@ -1,16 +1,21 @@
 fs = require 'fs'
-
+_ = require 'underscore-plus'
 LauncherView = require './launcher-view'
 StatsViewer = require './stats-viewer'
 StatusViewer = require './status-viewer'
-runners = require './pylprof/runner'
+PyLprof = require './pylprof/runner'
 
 {CompositeDisposable} = require 'atom'
 
-module.exports = Cprofile =
+coreConfig = {}
+
+Cprofile =
+
   subscriptions : null
   statsViewer : new StatsViewer()
   statusViewer : new StatusViewer()
+
+  config : _.extend {}, coreConfig, PyLprof.config
 
   activate: (state) ->
     @launcherview = new LauncherView onRunCommand : @run.bind(this)
@@ -35,16 +40,15 @@ module.exports = Cprofile =
     self = this
     editor = atom.workspace.getActivePaneItem()
     filename = editor.buffer.file.path
-    PyRunner = runners.pylprof
-    prInstance = new PyRunner()
-    stre = prInstance.run(cmd)
+    runner = new PyLprof()
+    stre = runner.run(cmd)
     .then (stats) ->
       self.launcherview.hide()
-      @statusViewer.render(status : 'success')
+      self.statusViewer.render(status : 'success')
       self.statsViewer.render editor, stats[filename]
     .catch (err) ->
-      @statusViewer.render({status : 'error', message : err})
-      @launcherview.show()
+      self.statusViewer.render({status : 'error', message : err})
+      self.launcherview.show()
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
@@ -53,3 +57,5 @@ module.exports = Cprofile =
       @statsViewer.clear(editor)
     else
       @launcherview.show()
+
+module.exports = Cprofile

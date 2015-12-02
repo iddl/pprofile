@@ -9,7 +9,7 @@ class StatusView extends View
     success = params.status == 'success'
     icon = if success then 'icon-check' else 'icon-alert'
     title = if success then 'Line profiler - Success ' else 'Line profiler - Error '
-    console.log(params)
+    console.log(params.message)
 
     @div class: '', =>
       @div class: 'panel-heading padded heading header-view', =>
@@ -19,7 +19,7 @@ class StatusView extends View
       if not success
         @div class: 'tool-panel panel panel-bottom padding script-view native-key-bindings', =>
           @div class: 'panel-body padded output', =>
-            @pre class: 'line stdout', params.message
+            @pre class: 'line stdout', params.message.toString()
 
   initialize: (params) ->
     @onDestroy = params.onDestroy
