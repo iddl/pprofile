@@ -81,10 +81,7 @@ class PyLprof extends ProfileRunner
     shellCmd = atom.config.get('cprofile.shellCmd')
     exec = _.first shellCmd
     args = _.rest shellCmd
-    debugger
     child = spawn exec, args
-
-
 
     cmd = [
         @commands.importProfiler,
@@ -115,7 +112,6 @@ class PyLprof extends ProfileRunner
 
   run: (cmd) ->
     deferred = Q.defer()
-    debugger
     return @profile(cmd)
 
 module.exports = PyLprof

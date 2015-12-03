@@ -44,6 +44,7 @@ Cprofile =
     stre = runner.run(cmd)
     .then (stats) ->
       self.launcherview.hide()
+      self.statusViewer.show()
       self.statusViewer.render(status : 'success')
       self.statsViewer.render editor, stats[filename]
     .catch (err) ->
@@ -57,5 +58,6 @@ Cprofile =
       @statsViewer.clear(editor)
     else
       @launcherview.show()
+      @statusViewer.hide()
 
 module.exports = Cprofile

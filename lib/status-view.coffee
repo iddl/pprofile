@@ -1,7 +1,6 @@
 {View} = require 'space-pen'
 {TextEditorView} = require 'atom-space-pen-views'
 
-
 module.exports =
 class StatusView extends View
   @content: (params) ->
@@ -9,7 +8,6 @@ class StatusView extends View
     success = params.status == 'success'
     icon = if success then 'icon-check' else 'icon-alert'
     title = if success then 'Line profiler - Success ' else 'Line profiler - Error '
-    console.log(params.message)
 
     @div class: '', =>
       @div class: 'panel-heading padded heading header-view', =>

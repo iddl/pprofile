@@ -2,8 +2,6 @@ fs = require 'fs'
 _ = require 'underscore-plus'
 StatusView = require './status-view'
 
-{CompositeDisposable} = require 'atom'
-
 class StatusViewer
 
   @className = 'status-panel'
@@ -18,11 +16,18 @@ class StatusViewer
       existingPanel.destroy()
 
   render: (props) ->
-    @destroy()
     props.onDestroy = @destroy
+    @view = new StatusView(props)
     atom.workspace.addBottomPanel({
-      item: new StatusView(props), 
+      item: new StatusView(props),
       className : @className
     })
+
+  hide: ->
+    if @view
+     @view.hide()
+
+  show: ->
+    @view.show()
 
 module.exports = StatusViewer
