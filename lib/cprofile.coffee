@@ -1,6 +1,6 @@
 fs = require 'fs'
 _ = require 'underscore-plus'
-LauncherView = require './launcher-view'
+LauncherView = require './views/launcher-view'
 StatsViewer = require './stats-viewer'
 StatusViewer = require './status-viewer'
 PyLprof = require './pylprof/runner'

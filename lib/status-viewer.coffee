@@ -1,6 +1,6 @@
 fs = require 'fs'
 _ = require 'underscore-plus'
-StatusView = require './status-view'
+StatusView = require './views/status-view'
 
 class StatusViewer
 
@@ -25,9 +25,10 @@ class StatusViewer
 
   hide: ->
     if @view
-     @view.hide()
+      @view.hide()
 
   show: ->
-    @view.show()
+    if @view
+      @view.show()
 
 module.exports = StatusViewer

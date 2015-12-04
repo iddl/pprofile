@@ -5,35 +5,14 @@
 @import "ui-variables";
 
 atom-text-editor::shadow .gutter[gutter-name*="cprofile"] {
-    width: 100px;
-
-    // @background-color-success: #17ca65;
-    // @background-color-warning: #ff4800;
-    // @background-color-error: #c00;
+    width: 120px;
 
     .line-stats{
-        padding-left: 15px;
-
-        &::before{
-            content: '';
-            position: absolute;
-            left: 0;
+        .border {
+            margin-right: 15px;
             border-left: 1px solid;
-            top: 15%;
-            height: 50%;
+            height: 100%;
         }
-        //
-        // &.good::before{
-        //     border-left-color: #17ca65;
-        // }
-
-        // &.warn::before{
-        //     border-left-color: #FFF200;
-        // }
-        //
-        // &.bad::before{
-        //     border-left-color: #FF0101;
-        // }
     }
 }
 
