@@ -19,6 +19,10 @@
     "space-pen" : "*",
     "atom-space-pen-views" : "*",
     "d3-scale" : "0.2.0",
-    "d3-arrays" : "0.4.0"
+    "d3-arrays" : "0.4.0",
+    "coffeelint" : "1.14.2"
+  },
+  "scripts": {
+    "lint": "coffeelint lib/*.coffee spec/*.coffee"
   }
 }
