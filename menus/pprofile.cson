@@ -2,19 +2,19 @@
 'context-menu':
   'atom-text-editor': [
     {
-      'label': 'Toggle cprofile'
-      'command': 'cprofile:toggle'
+      'label': 'Toggle PProfile'
+      'command': 'pprofile:toggle'
     }
   ]
 'menu': [
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'cprofile'
+      'label': 'pprofile'
       'submenu': [
         {
           'label': 'Toggle'
-          'command': 'cprofile:toggle'
+          'command': 'pprofile:toggle'
         }
       ]
     ]

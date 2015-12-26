@@ -11,10 +11,10 @@ class StatsViewer
     opts = opts || {}
     marker = editor.markBufferRange lines
 
-    marker.emitter.on 'cprofile:reload', ->
+    marker.emitter.on 'pprofile:reload', ->
       marker.destroy()
 
-    marker.emitter.on 'cprofile:destroy', ->
+    marker.emitter.on 'pprofile:destroy', ->
       marker.destroy()
 
     cc = ['good', 'warn', 'bad']
@@ -33,12 +33,12 @@ class StatsViewer
     item.appendChild(border)
     item.appendChild(textContainer)
 
-    editor.decorateMarker marker, {type: 'gutter', gutterName: 'cprofile', class: 'profile-gutter', item: item}
+    editor.decorateMarker marker, {type: 'gutter', gutterName: 'pprofile', class: 'profile-gutter', item: item}
 
   addGutter: (editor) ->
-    gutter = _.findWhere editor.getGutters(), {name : 'cprofile'}
+    gutter = _.findWhere editor.getGutters(), {name : 'pprofile'}
     if !gutter
-      gutter = editor.addGutter {'name' : 'cprofile', 'priority' : 100, 'style'}
+      gutter = editor.addGutter {'name' : 'pprofile', 'priority' : 100, 'style'}
 
     return gutter
 
@@ -66,13 +66,13 @@ class StatsViewer
     self = this
     self.addGutter editor
     editor.getMarkers().forEach (marker) ->
-      marker.emitter.emit 'cprofile:reload'
+      marker.emitter.emit 'pprofile:reload'
     self.addMarkers editor, stats
 
   clear: (editor) ->
     editor.getMarkers().forEach (marker) ->
-      marker.emitter.emit 'cprofile:destroy'
-    gutter = _.findWhere editor.getGutters(), {name : 'cprofile'}
+      marker.emitter.emit 'pprofile:destroy'
+    gutter = _.findWhere editor.getGutters(), {name : 'pprofile'}
     if gutter
       gutter.destroy()
 

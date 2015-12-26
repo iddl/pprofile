@@ -5,7 +5,7 @@ module.exports =
 class LauncherView extends View
 
   @content: ->
-    @div class: 'cprofile-launcher', =>
+    @div class: 'pprofile-launcher', =>
       @section class : 'input-block', =>
         @div class : 'input-block-item input-block-item--flex editor-container', =>
           @subview 'editor', new TextEditorView

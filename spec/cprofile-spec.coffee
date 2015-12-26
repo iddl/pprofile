@@ -1,40 +1,40 @@
-Cprofile = require '../lib/cprofile'
+pprofile = require '../lib/pprofile'
 
 # Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
 #
 # To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
 # or `fdescribe`). Remove the `f` to unfocus the block.
 
-describe "Cprofile", ->
+describe "pprofile", ->
   [workspaceElement, activationPromise] = []
 
   beforeEach ->
     workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('cprofile')
+    activationPromise = atom.packages.activatePackage('pprofile')
 
-  describe "when the cprofile:toggle event is triggered", ->
+  describe "when the pprofile:toggle event is triggered", ->
     it "hides and shows the modal panel", ->
       # Before the activation event the view is not on the DOM, and no panel
       # has been created
-      expect(workspaceElement.querySelector('.cprofile')).not.toExist()
+      expect(workspaceElement.querySelector('.pprofile')).not.toExist()
 
       # This is an activation event, triggering it will cause the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'cprofile:toggle'
+      atom.commands.dispatch workspaceElement, 'pprofile:toggle'
 
       waitsForPromise ->
         activationPromise
 
       runs ->
-        expect(workspaceElement.querySelector('.cprofile')).toExist()
+        expect(workspaceElement.querySelector('.pprofile')).toExist()
 
-        cprofileElement = workspaceElement.querySelector('.cprofile')
-        expect(cprofileElement).toExist()
+        pprofileElement = workspaceElement.querySelector('.pprofile')
+        expect(pprofileElement).toExist()
 
-        cprofilePanel = atom.workspace.panelForItem(cprofileElement)
-        expect(cprofilePanel.isVisible()).toBe true
-        atom.commands.dispatch workspaceElement, 'cprofile:toggle'
-        expect(cprofilePanel.isVisible()).toBe false
+        pprofilePanel = atom.workspace.panelForItem(pprofileElement)
+        expect(pprofilePanel.isVisible()).toBe true
+        atom.commands.dispatch workspaceElement, 'pprofile:toggle'
+        expect(pprofilePanel.isVisible()).toBe false
 
     it "hides and shows the view", ->
       # This test shows you an integration test testing at the view level.
@@ -45,18 +45,18 @@ describe "Cprofile", ->
       # workspaceElement to the DOM are generally slower than those off DOM.
       jasmine.attachToDOM(workspaceElement)
 
-      expect(workspaceElement.querySelector('.cprofile')).not.toExist()
+      expect(workspaceElement.querySelector('.pprofile')).not.toExist()
 
       # This is an activation event, triggering it causes the package to be
       # activated.
-      atom.commands.dispatch workspaceElement, 'cprofile:toggle'
+      atom.commands.dispatch workspaceElement, 'pprofile:toggle'
 
       waitsForPromise ->
         activationPromise
 
       runs ->
         # Now we can test for view visibility
-        cprofileElement = workspaceElement.querySelector('.cprofile')
-        expect(cprofileElement).toBeVisible()
-        atom.commands.dispatch workspaceElement, 'cprofile:toggle'
-        expect(cprofileElement).not.toBeVisible()
+        pprofileElement = workspaceElement.querySelector('.pprofile')
+        expect(pprofileElement).toBeVisible()
+        atom.commands.dispatch workspaceElement, 'pprofile:toggle'
+        expect(pprofileElement).not.toBeVisible()

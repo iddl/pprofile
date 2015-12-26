@@ -1,14 +1,14 @@
 {
-  "name": "cprofile",
-  "main": "./lib/cprofile",
+  "name": "PProfile",
+  "main": "./lib/pprofile",
   "version": "0.0.0",
   "description": "A short description of your package",
   "keywords": [
   ],
   "activationCommands": {
-    "atom-workspace": "cprofile:toggle"
+    "atom-workspace": "pprofile:toggle"
   },
-  "repository": "https://github.com/atom/cprofile",
+  "repository": "https://github.com/atom/pprofile",
   "license": "MIT",
   "engines": {
     "atom": ">=1.0.0 <2.0.0"

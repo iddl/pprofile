@@ -1,5 +1,5 @@
-CprofileView = require '../lib/cprofile-view'
+pprofileView = require '../lib/pprofile-view'
 
-describe "CprofileView", ->
+describe "pprofileView", ->
   it "has one valid test", ->
     expect("life").toBe "easy"

@@ -1,8 +1,8 @@
-import cProfile
+import pprofile
 
-def do_cprofile(func):
+def do_pprofile(func):
     def profiled_func(*args, **kwargs):
-        profile = cProfile.Profile()
+        profile = pprofile.Profile()
         try:
             profile.enable()
             result = func(*args, **kwargs)
@@ -16,7 +16,7 @@ def get_number():
     for x in xrange(5000000):
         yield x
 
-@do_cprofile
+@do_pprofile
 def expensive_function():
     for x in get_number():
         i = x ^ x ^ x

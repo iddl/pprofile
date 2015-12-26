@@ -78,7 +78,7 @@ class PyLprof extends ProfileRunner
   profile: (cmd) ->
     deferred = Q.defer()
 
-    shellCmd = atom.config.get('cprofile.shellCmd')
+    shellCmd = atom.config.get('pprofile.shellCmd')
     exec = _.first shellCmd
     args = _.rest shellCmd
     child = spawn exec, args

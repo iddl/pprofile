@@ -9,7 +9,7 @@ PyLprof = require './pylprof/runner'
 
 coreConfig = {}
 
-Cprofile =
+pprofile =
 
   subscriptions : null
   statsViewer : new StatsViewer()
@@ -26,15 +26,15 @@ Cprofile =
     @subscriptions = new CompositeDisposable
 
     # Register command that toggles this view
-    @subscriptions.add atom.commands.add 'atom-workspace', 'cprofile:toggle': => @toggle()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'pprofile:toggle': => @toggle()
 
   deactivate: ->
     @modalPanel.destroy()
     @subscriptions.dispose()
-    @cprofileView.destroy()
+    @pprofileView.destroy()
 
   serialize: ->
-    cprofileViewState: @cprofileView.serialize()
+    pprofileViewState: @pprofileView.serialize()
 
   run: (cmd) ->
     self = this
@@ -60,4 +60,4 @@ Cprofile =
       @launcherview.show()
       @statusViewer.hide()
 
-module.exports = Cprofile
+module.exports = pprofile
