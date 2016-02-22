@@ -1,6 +1,7 @@
 fs = require('fs')
 Q = require('q')
 spawn = require('child_process').spawn
+path = require('path')
 _ = require('underscore-plus')
 ProfileRunner = require('../profile-runner')
 
@@ -18,32 +19,15 @@ class PyLprof extends ProfileRunner
         type: 'string'
   }
 
-  commands : {
-      importProfiler : """
-      from line_profiler import LineProfiler
-      lp = LineProfiler()
-      """,
-      dumpStats : """
-      import json
-      stats = lp.get_stats()
-      unit = stats.unit
-      results = {}
-      for function, timings in stats.timings.iteritems():
-          module, line, fname = function
-          results[module] = {}
-          for sample in timings:
-              linenumber, ncalls, timing = sample
-              if not results[module].get(linenumber):
-                  results[module][linenumber] = []
-              results[module][linenumber].append({
-                  'name' : '',
-                  'timing' : [ncalls, timing*unit, timing*unit*ncalls]
-              })\n\n
-      jsondump = json.dumps(results)
-      print('@@@STATSDUMPSTART@@@' + jsondump + '@@@STATSDUMPEND@@@')
-      exit()\n
-      """
-  }
+  cmdConfig : [
+    {
+      name : 'importProfiler',
+      source : 'imports.py'
+    }, {
+      name : 'dumpStats',
+      source : 'dump-stats.py'
+    }
+  ]
 
   dialtone: (child) ->
     maxAttempts = 10
@@ -75,18 +59,27 @@ class PyLprof extends ProfileRunner
 
     return deferred.promise
 
+  loadProfilerCommands: (cmdConfig) ->
+    commands = {}
+    cmdConfig.forEach (cmd) ->
+      commands[cmd.name] = fs.readFileSync(path.resolve(__dirname,cmd.source), 'utf8')
+
+    return commands
+
   profile: (cmd) ->
     deferred = Q.defer()
 
-    shellCmd = atom.config.get('pprofile.shellCmd')
+    commands = @loadProfilerCommands(@cmdConfig)
+
+    shellCmd = atom.config.get('PProfile.shellCmd')
     exec = _.first shellCmd
     args = _.rest shellCmd
     child = spawn exec, args
 
     cmd = [
-        @commands.importProfiler,
+        commands.importProfiler,
         cmd,
-        @commands.dumpStats
+        commands.dumpStats
     ].join('\n')
 
     content = ''
