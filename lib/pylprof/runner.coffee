@@ -83,10 +83,11 @@ class PyLprof extends ProfileRunner
     ].join('\n')
 
     content = ''
+    stderr = ''
     @dialtone(child).then ->
       child.stdin.write cmd
       child.stderr.on 'data', (data) ->
-        console.log(data.toString())
+        stderr += data.toString()
       child.stdout.on 'data', (data) ->
         # inefficient but will do for now
         content += data.toString()
@@ -95,9 +96,9 @@ class PyLprof extends ProfileRunner
           m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
           m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
           stats = JSON.parse(m)
-          deferred.resolve(stats)
+          deferred.resolve({stats : stats, message : stderr})
         catch error
-          deferred.reject('Error parsing statistics')
+          deferred.reject({message :'Error parsing statistics'})
     .catch (err) ->
       deferred.reject(err)
 

@@ -14,7 +14,7 @@ class StatusView extends View
         @span class: 'heading-title', title
         @span class: icon
         @span { class: 'heading-close icon-remove-close pull-right', click : 'onDestroy' }
-      if not success
+      if params.message
         @div class: 'tool-panel panel panel-bottom padding script-view native-key-bindings', =>
           @div class: 'panel-body padded output', =>
             @pre class: 'line stdout', params.message.toString()
