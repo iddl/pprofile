@@ -13,17 +13,14 @@ class StatusView extends View
       @div class: 'panel-heading padded heading header-view', =>
         @span class: 'heading-title', title
         @span class: icon
-        @span { class: 'heading-close icon-remove-close pull-right', click : 'onDestroy' }
+        @span { class: 'heading-close icon-remove-close pull-right', click : 'destroy' }
       if params.message
         @div class: 'tool-panel panel panel-bottom padding script-view native-key-bindings', =>
           @div class: 'panel-body padded output', =>
             @pre class: 'line stdout', params.message.toString()
 
   initialize: (params) ->
-    @onDestroy = params.onDestroy
-
-  onDestroy: ->
-    @onDestroy()
+    @params = params
 
   serialize: ->
 

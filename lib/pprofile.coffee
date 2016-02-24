@@ -43,13 +43,11 @@ pprofile =
     runner = new PyLprof()
     stre = runner.run(cmd)
     .then (data) ->
-      self.launcherview.hide()
       self.statusViewer.show()
       self.statusViewer.render(status : 'success', message : data.message)
       self.statsViewer.render editor, data.stats[filename]
     .catch (data) ->
       self.statusViewer.render({status : 'error', message : data.message})
-      self.launcherview.show()
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()

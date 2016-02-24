@@ -11,15 +11,16 @@ class StatusViewer
   initialize: ->
 
   destroy: ->
-    existingPanel = _.findWhere atom.workspace.getBottomPanels(), className : @className
-    if existingPanel
-      existingPanel.destroy()
+    if @view
+      @view.destroy()
 
   render: (props) ->
-    props.onDestroy = @destroy
+    if @view
+      @view.destroy()
+
     @view = new StatusView(props)
     atom.workspace.addBottomPanel({
-      item: new StatusView(props),
+      item: @view,
       className : @className
     })
 
