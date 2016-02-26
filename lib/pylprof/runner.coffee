@@ -32,6 +32,7 @@ class PyLprof extends ProfileRunner
   dialtone: (child) ->
     maxAttempts = 10
     curAttempt = 0
+    stderr = ''
     dialtoneKey = '@@@DIALTONE@@@'
     dialtoneCmd = 'print "' + dialtoneKey + '"\n'
     deferred = Q.defer()
@@ -50,7 +51,10 @@ class PyLprof extends ProfileRunner
         curAttempt += 1
     ), 1000
 
-    child.stderr.on 'data', ->
+    child.stderr.on 'data', (err) ->
+      err = err.toString()
+      stderr += err
+      console.log(err)
 
     child.stdout.on 'data', (data) ->
       if data.toString().indexOf(dialtoneKey) isnt -1
