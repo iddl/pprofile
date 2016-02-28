@@ -40,21 +40,20 @@ class PyLprof extends ProfileRunner
     dialtoneInterval = setInterval (->
       if curAttempt > maxAttempts
         clearInterval dialtoneInterval
-        deferred.reject()
+        deferred.reject('Dialtone max attempts reached')
       else
         try
           child.stdin.write dialtoneCmd for i in [0..100]
         catch err
           clearInterval dialtoneInterval
-          deferred.reject(err)
+          stderr += err.toString()
+          deferred.reject(stderr)
 
         curAttempt += 1
     ), 1000
 
     child.stderr.on 'data', (err) ->
-      err = err.toString()
-      stderr += err
-      console.log(err)
+      stderr += err.toString()
 
     child.stdout.on 'data', (data) ->
       if data.toString().indexOf(dialtoneKey) isnt -1
