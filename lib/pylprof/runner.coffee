@@ -83,7 +83,7 @@ class PyLprof extends ProfileRunner
         commands.importProfiler,
         cmd,
         commands.dumpStats
-    ].join('\n')
+    ].join('\n\n')
 
     content = ''
     stderr = ''
