@@ -4,8 +4,6 @@ StatusView = require './views/status-view'
 
 class StatusViewer
 
-  @className = 'status-panel'
-
   constructor: ->
 
   initialize: ->

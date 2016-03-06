@@ -101,7 +101,7 @@ class PyLprof extends ProfileRunner
           stats = JSON.parse(m)
           deferred.resolve({stats : stats, message : stderr})
         catch error
-          deferred.reject({message :'Error parsing statistics'})
+          deferred.reject({message : stderr})
     .catch (err) ->
       deferred.reject(err)
 

@@ -9,7 +9,7 @@ class StatusView extends View
     icon = if success then 'icon-check' else 'icon-alert'
     title = if success then 'Line profiler - Success ' else 'Line profiler - Error '
 
-    @div class: '', =>
+    @div class: 'profile-status', =>
       @div class: 'panel-heading padded heading header-view', =>
         @span class: 'heading-title', title
         @span class: icon
