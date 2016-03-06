@@ -40,6 +40,7 @@ pprofile =
     self = this
     editor = atom.workspace.getActivePaneItem()
     filename = editor.buffer.file.path
+    @launcherview.props({status : 'running'})
     runner = new PyLprof()
     stre = runner.run(cmd)
     .then (data) ->
@@ -48,6 +49,8 @@ pprofile =
       self.statsViewer.render editor, data.stats[filename]
     .catch (data) ->
       self.statusViewer.render({status : 'error', message : data.message})
+    .finally () ->
+      self.launcherview.props({status : 'idle'})
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()

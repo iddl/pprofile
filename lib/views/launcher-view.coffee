@@ -11,13 +11,20 @@ class LauncherView extends View
           @subview 'editor', new TextEditorView
         @div class : 'input-block-item', =>
           @div class : 'btn-group btn-group-run', =>
-            @button 'Profile', { class : 'btn', click: 'onRunButtonClick'}
+            @button class : 'btn', click: 'onRunButtonClick', =>
+              @span 'Run', class : 'text'
+              @div outlet: "loader"
 
   initialize: (params) ->
     @onRunCommand = params.onRunCommand
 
   onRunButtonClick: (event, element) ->
     @onRunCommand(@editor.getModel().getText())
+
+  # FIXME make this become render
+  props: (props) ->
+    running = props.status == 'running'
+    @loader.toggleClass 'loader', running
 
   # Returns an object that can be retrieved when package is activated
   serialize: ->

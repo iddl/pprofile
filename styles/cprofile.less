@@ -40,11 +40,20 @@ atom-text-editor::shadow .gutter[gutter-name*="pprofile"] {
         flex: 1;
     }
 
-    .btn-group{
+    .btn-group {
         display: flex;
 
-        &.btn-group-run{
+        &.btn-group-run {
             flex: 1 1 120px;
+
+            .text {
+                margin-right: 5px;
+            }
+
+            .loader {
+                position: absolute;
+                top: 3px;
+            }
         }
     }
 
