@@ -29,39 +29,6 @@ class PyLprof extends ProfileRunner
     }
   ]
 
-  dialtone: (child) ->
-    maxAttempts = 10
-    curAttempt = 0
-    stderr = ''
-    dialtoneKey = '@@@DIALTONE@@@'
-    dialtoneCmd = 'print "' + dialtoneKey + '"\n'
-    deferred = Q.defer()
-
-    dialtoneInterval = setInterval (->
-      if curAttempt > maxAttempts
-        clearInterval dialtoneInterval
-        deferred.reject('Dialtone max attempts reached')
-      else
-        try
-          child.stdin.write dialtoneCmd for i in [0..100]
-        catch err
-          clearInterval dialtoneInterval
-          stderr += err.toString()
-          deferred.reject(stderr)
-
-        curAttempt += 1
-    ), 1000
-
-    child.stderr.on 'data', (err) ->
-      stderr += err.toString()
-
-    child.stdout.on 'data', (data) ->
-      if data.toString().indexOf(dialtoneKey) isnt -1
-        clearInterval dialtoneInterval
-        deferred.resolve child
-
-    return deferred.promise
-
   loadProfilerCommands: (cmdConfig) ->
     commands = {}
     cmdConfig.forEach (cmd) ->
@@ -87,23 +54,24 @@ class PyLprof extends ProfileRunner
 
     content = ''
     stderr = ''
-    @dialtone(child).then ->
-      child.stdin.write cmd
-      child.stderr.on 'data', (data) ->
-        stderr += data.toString()
-      child.stdout.on 'data', (data) ->
-        # inefficient but will do for now
-        content += data.toString()
-      child.on 'exit', (code) =>
-        try
-          m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
-          m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
-          stats = JSON.parse(m)
-          deferred.resolve({stats : stats, message : stderr})
-        catch error
-          deferred.reject({message : stderr})
-    .catch (err) ->
-      deferred.reject(err)
+
+    child.stdin.write cmd
+
+    child.stderr.on 'data', (data) ->
+      stderr += data.toString()
+
+    child.stdout.on 'data', (data) ->
+      # inefficient but will do for now
+      content += data.toString()
+
+    child.on 'exit', (code) =>
+      try
+        m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
+        m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
+        stats = JSON.parse(m)
+        deferred.resolve({stats : stats, message : stderr})
+      catch error
+        deferred.reject({message : stderr})
 
     return deferred.promise
 
