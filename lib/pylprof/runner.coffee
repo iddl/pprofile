@@ -68,7 +68,6 @@ class PyLprof extends ProfileRunner
     child.on 'exit', (code) =>
       try
         m = (stdout.match 'statsstart(.*)statsend')[1]
-        m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
         stats = JSON.parse(m)
         deferred.resolve({stats : stats, message : stderr})
       catch error

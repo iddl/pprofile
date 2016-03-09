@@ -1,5 +1,6 @@
 fs = require 'fs'
 _ = require 'underscore-plus'
+path = require('path')
 LauncherView = require './views/launcher-view'
 StatsViewer = require './stats-viewer'
 StatusViewer = require './status-viewer'
@@ -36,6 +37,14 @@ pprofile =
   serialize: ->
     pprofileViewState: @pprofileView.serialize()
 
+  # not optimal, it's basically going to match
+  # the basename, got to find a better way to do this
+  getFileStats: (filename, stats) ->
+    basename = path.basename filename
+    filenames = _.keys stats
+    key = _.find filenames, (f) -> return f.endsWith basename
+    return stats[key]
+
   run: (cmd) ->
     self = this
     editor = atom.workspace.getActivePaneItem()
@@ -46,7 +55,7 @@ pprofile =
     .then (data) ->
       self.statusViewer.show()
       self.statusViewer.render(status : 'success', message : data.message)
-      self.statsViewer.render editor, data.stats[filename]
+      self.statsViewer.render editor, self.getFileStats(filename, data.stats)
     .catch (data) ->
       self.statusViewer.render({status : 'error', message : data.message})
     .finally () ->
