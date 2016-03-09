@@ -32,7 +32,8 @@ class PyLprof extends ProfileRunner
   loadProfilerCommands: (cmdConfig) ->
     commands = {}
     cmdConfig.forEach (cmd) ->
-      commands[cmd.name] = fs.readFileSync(path.resolve(__dirname,cmd.source), 'utf8')
+      cmdfile = path.resolve __dirname, cmd.source
+      commands[cmd.name] = fs.readFileSync cmdfile, 'utf8'
 
     return commands
 
@@ -52,7 +53,7 @@ class PyLprof extends ProfileRunner
         commands.dumpStats
     ].join('\n\n')
 
-    content = ''
+    stdout = ''
     stderr = ''
 
     child.stdin.write cmd
@@ -62,11 +63,11 @@ class PyLprof extends ProfileRunner
 
     child.stdout.on 'data', (data) ->
       # inefficient but will do for now
-      content += data.toString()
+      stdout += data.toString()
 
     child.on 'exit', (code) =>
       try
-        m = (content.match '@@@STATSDUMPSTART@@@(.*)@@@STATSDUMPEND@@@')[1]
+        m = (stdout.match 'statsstart(.*)statsend')[1]
         m = m.replace('/home/vagrant/workspace', '/home/ivan/local/vm')
         stats = JSON.parse(m)
         deferred.resolve({stats : stats, message : stderr})

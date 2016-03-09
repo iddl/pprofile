@@ -16,6 +16,6 @@ for function, timings in stats.timings.iteritems():
 
 
 jsondump = json.dumps(results)
-print('@@@STATSDUMPSTART@@@' + jsondump + '@@@STATSDUMPEND@@@')
+print('statsstart' + jsondump + 'statsend')
 sys.stdout.flush()
 exit()
