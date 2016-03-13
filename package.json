@@ -18,8 +18,8 @@
     "q" : "1.4.1",
     "space-pen" : "*",
     "atom-space-pen-views" : "*",
-    "d3-scale" : "0.2.0",
-    "d3-arrays" : "0.4.0",
+    "d3-scale" : "0.6.4",
+    "d3-array" : "0.7.1",
     "coffeelint" : "1.14.2"
   },
   "scripts": {
