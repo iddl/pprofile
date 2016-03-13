@@ -5,14 +5,16 @@
 @import "ui-variables";
 
 atom-text-editor::shadow .gutter[gutter-name*="pprofile"] {
-    width: 120px;
-
     .line-stats{
         .border {
             margin-right: 15px;
             border-left: 1px solid;
             height: 100%;
         }
+    }
+
+    .line-stats-width{
+        visibility: hidden;
     }
 }
 
