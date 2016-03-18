@@ -3,12 +3,8 @@ Q = require('q')
 spawn = require('child_process').spawn
 path = require('path')
 _ = require('underscore-plus')
-ProfileRunner = require('../profile-runner')
 
-class PyLprof extends ProfileRunner
-
-  constructor: ->
-    super()
+class PyLprof
 
   @config: {
     shellCmd:

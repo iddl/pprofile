@@ -2,8 +2,8 @@ fs = require 'fs'
 _ = require 'underscore-plus'
 path = require('path')
 LauncherView = require './views/launcher-view'
-StatsViewer = require './stats-viewer'
-StatusViewer = require './status-viewer'
+StatsViewer = require './utils/stats-viewer'
+StatusViewer = require './utils/status-viewer'
 PyLprof = require './pylprof/runner'
 
 {CompositeDisposable} = require 'atom'
