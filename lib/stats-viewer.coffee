@@ -67,7 +67,7 @@ class StatsViewer
 
   getColorScale: (stats) ->
     range = ['#17ca65', '#FFF200', '#FF0101']
-    timings = _.chain(stats).values().map(_.first).pluck('timing').value()
+    timings = _.pluck(stats, 'timing')
     ext = extent(timings, (d) -> d[2])
     domain = [ext[0], ext[0]+(ext[1]-ext[0])/2, ext[1]]
     return scaleLinear().domain(domain).range(range)
@@ -77,14 +77,12 @@ class StatsViewer
     self = this
     colorScale = @getColorScale stats
     widestText = ''
-    _.each stats, (values, line) ->
-      lineNumber = (parseInt line,10) - 1
-      lineStats = _.first values
-      nCalls = lineStats.timing[0]
-      totalTime = parseFloat(lineStats.timing[2].toFixed(8))
+    _.each stats, (s) ->
+      nCalls = s.timing[0]
+      totalTime = parseFloat(s.timing[2].toFixed(8))
       text = "(#{nCalls}) #{totalTime}"
       opts = color : colorScale(totalTime)
-      self.addMarker editor, [[lineNumber, 0], [lineNumber, Infinity]], text, opts
+      self.addMarker editor, [[s.line, 0], [s.line, Infinity]], text, opts
       if text.length > widestText.length
         widestText = text
 

@@ -37,6 +37,21 @@ class PyLprof extends ProfileRunner
 
     return commands
 
+  format: (stats) ->
+    formatted = []
+    _.each stats, (filestats, filename) ->
+        fstats = {
+            file : filename,
+            stats : []
+        }
+        _.each filestats, (lstats, lineno) ->
+          lstats.forEach (l) ->
+            line = (parseInt lineno)-1
+            s = _.extend l, {line : line}
+            fstats.stats.push(s)
+        formatted.push fstats
+    return formatted
+
   profile: (cmd) ->
     deferred = Q.defer()
 
@@ -69,6 +84,7 @@ class PyLprof extends ProfileRunner
       try
         m = (stdout.match 'statsstart(.*)statsend')[1]
         stats = JSON.parse(m)
+        stats = @format(stats)
         deferred.resolve({stats : stats, message : stderr})
       catch error
         deferred.reject({message : stderr})

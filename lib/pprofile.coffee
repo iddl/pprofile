@@ -41,9 +41,8 @@ pprofile =
   # the basename, got to find a better way to do this
   getFileStats: (filename, stats) ->
     basename = path.basename filename
-    filenames = _.keys stats
-    key = _.find filenames, (f) -> return f.endsWith basename
-    return stats[key]
+    filestats = _.find stats, (s) -> return s.file.endsWith basename
+    return if filestats then filestats.stats else null
 
   run: (cmd) ->
     self = this
