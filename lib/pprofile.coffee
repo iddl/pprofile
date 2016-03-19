@@ -27,8 +27,8 @@ statsViewer = new StatsViewer({
         }
     ],
     defaults : {
-        color : 'Hits',
-        label : ['Hits', 'Total Time']
+        colorBy : 'Hits',
+        labelBy : ['Hits', 'Total Time']
     }
 })
 

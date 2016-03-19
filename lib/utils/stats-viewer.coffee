@@ -11,18 +11,23 @@ class StatsViewer
     @fields = cfg.fields
 
     @config = {
-      color:
-        title: 'Line color'
-        type: 'string'
-        enum: fieldNames
-        default: cfg.defaults.color
-      label:
-        title: 'Label',
-        type: 'array',
-        default: cfg.defaults.label
-        items:
-          type: 'string',
-          enum: fieldNames
+      appearance:
+        title: 'Statistics appearance'
+        type: 'object'
+        properties:
+          colorBy:
+            title: 'Color line markers using'
+            type: 'string'
+            enum: fieldNames
+            default: cfg.defaults.colorBy
+          labelBy:
+            title: 'Stats to show per line',
+            type: 'array',
+            description: "Available fields: #{fieldNames.join ', '}"
+            default: cfg.defaults.labelBy
+            items:
+              type: 'string',
+              enum: fieldNames
     }
 
   getField: (name) ->
@@ -30,7 +35,7 @@ class StatsViewer
 
   labelFormatter: () ->
     self = this
-    fields = atom.config.get('PProfile.label')
+    fields = atom.config.get('PProfile.appearance.labelBy')
     fields = fields.map (f) ->
       f = self.getField(f)
       return (line) ->
@@ -108,7 +113,7 @@ class StatsViewer
   addMarkers: (editor, stats) ->
     stats = stats || {}
     self = this
-    colorField = @getField atom.config.get 'PProfile.color'
+    colorField = @getField atom.config.get 'PProfile.appearance.colorBy'
     colorScale = @getColorScale stats, colorField
     formatter = @labelFormatter()
     widestText = ''
