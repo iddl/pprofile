@@ -6,7 +6,7 @@ class StatsViewer
   editor = null
 
   constructor: (cfg) ->
-    fields = _.pluck cfg.fields, 'name'
+    fieldNames = _.pluck cfg.fields, 'name'
 
     @fields = cfg.fields
 
@@ -14,14 +14,30 @@ class StatsViewer
       color:
         title: 'Line color'
         type: 'string'
-        enum: fields
+        enum: fieldNames
         default: cfg.defaults.color
+      label:
+        title: 'Label',
+        type: 'array',
+        default: cfg.defaults.label
         items:
-          type: 'string'
+          type: 'string',
+          enum: fieldNames
     }
 
   getField: (name) ->
     return _.findWhere @fields, {name : name}
+
+  labelFormatter: () ->
+    self = this
+    fields = atom.config.get('PProfile.label')
+    fields = fields.map (f) ->
+      f = self.getField(f)
+      return (line) ->
+        return f.format(f.get(line))
+    return (line) ->
+      fields.map((f) -> return f line.timing).join ' '
+
 
   createMarkerNode: (text, opts) ->
     item = document.createElement 'div'
@@ -81,24 +97,24 @@ class StatsViewer
         'priority' : 100
       }
 
-  getColorScale: (stats) ->
+  getColorScale: (stats, field) ->
     range = ['#17ca65', '#FFF200', '#FF0101']
     timings = _.pluck(stats, 'timing')
-    field = @getField(atom.config.get('PProfile.color'))
     ext = extent(timings, field.get)
     domain = [ext[0], ext[0]+(ext[1]-ext[0])/2, ext[1]]
+    console.log(domain)
     return scaleLinear().domain(domain).range(range)
 
   addMarkers: (editor, stats) ->
     stats = stats || {}
     self = this
-    colorScale = @getColorScale stats
+    colorField = @getField atom.config.get 'PProfile.color'
+    colorScale = @getColorScale stats, colorField
+    formatter = @labelFormatter()
     widestText = ''
     _.each stats, (s) ->
-      nCalls = s.timing[0]
-      totalTime = parseFloat(s.timing[2].toFixed(8))
-      text = "(#{nCalls}) #{totalTime}"
-      opts = color : colorScale(totalTime)
+      text = formatter(s)
+      opts = color : colorScale colorField.get s.timing
       self.addMarker editor, [[s.line, 0], [s.line, Infinity]], text, opts
       if text.length > widestText.length
         widestText = text

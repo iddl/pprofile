@@ -13,17 +13,17 @@ statsViewer = new StatsViewer({
         {
             name : 'Hits',
             get : (d) -> return d[0],
-            format : _.identity
+            format : (d) -> return "(#{d})"
         },
         {
             name : 'Time per hit',
             get : (d) -> return d[1],
-            format : _.identity
+            format : (d) -> return d.toFixed(8)
         },
         {
             name : 'Total Time',
             get : (d) -> return d[2],
-            format : _.identity
+            format : (d) -> return d.toFixed(8)
         }
     ],
     defaults : {
