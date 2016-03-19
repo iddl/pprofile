@@ -5,7 +5,23 @@ _ = require 'underscore-plus'
 class StatsViewer
   editor = null
 
-  constructor: () ->
+  constructor: (cfg) ->
+    fields = _.pluck cfg.fields, 'name'
+
+    @fields = cfg.fields
+
+    @config = {
+      color:
+        title: 'Line color'
+        type: 'string'
+        enum: fields
+        default: cfg.defaults.color
+        items:
+          type: 'string'
+    }
+
+  getField: (name) ->
+    return _.findWhere @fields, {name : name}
 
   createMarkerNode: (text, opts) ->
     item = document.createElement 'div'
@@ -68,7 +84,8 @@ class StatsViewer
   getColorScale: (stats) ->
     range = ['#17ca65', '#FFF200', '#FF0101']
     timings = _.pluck(stats, 'timing')
-    ext = extent(timings, (d) -> d[2])
+    field = @getField(atom.config.get('PProfile.color'))
+    ext = extent(timings, field.get)
     domain = [ext[0], ext[0]+(ext[1]-ext[0])/2, ext[1]]
     return scaleLinear().domain(domain).range(range)
 

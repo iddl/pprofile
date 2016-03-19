@@ -8,15 +8,36 @@ PyLprof = require './pylprof/runner'
 
 {CompositeDisposable} = require 'atom'
 
-coreConfig = {}
+statsViewer = new StatsViewer({
+    fields : [
+        {
+            name : 'Hits',
+            get : (d) -> return d[0],
+            format : _.identity
+        },
+        {
+            name : 'Time per hit',
+            get : (d) -> return d[1],
+            format : _.identity
+        },
+        {
+            name : 'Total Time',
+            get : (d) -> return d[2],
+            format : _.identity
+        }
+    ],
+    defaults : {
+        color : 'Hits',
+        label : ['Hits', 'Total Time']
+    }
+})
 
 pprofile =
 
   subscriptions : null
-  statsViewer : new StatsViewer()
   statusViewer : new StatusViewer()
 
-  config : _.extend {}, coreConfig, PyLprof.config
+  config : _.extend {}, statsViewer.config, PyLprof.config
 
   activate: (state) ->
     @launcherview = new LauncherView onRunCommand : @run.bind(this)
@@ -54,7 +75,7 @@ pprofile =
     .then (data) ->
       self.statusViewer.show()
       self.statusViewer.render(status : 'success', message : data.message)
-      self.statsViewer.render editor, self.getFileStats(filename, data.stats)
+      statsViewer.render editor, self.getFileStats(filename, data.stats)
     .catch (data) ->
       self.statusViewer.render({status : 'error', message : data.message})
     .finally () ->
@@ -64,7 +85,7 @@ pprofile =
     editor = atom.workspace.getActivePaneItem()
     if @launcherview.isVisible()
       @launcherview.hide()
-      @statsViewer.clear(editor)
+      statsViewer.clear(editor)
     else
       @launcherview.show()
       @statusViewer.hide()
