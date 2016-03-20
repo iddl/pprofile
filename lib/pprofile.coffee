@@ -2,8 +2,8 @@ fs = require 'fs'
 _ = require 'underscore-plus'
 path = require('path')
 LauncherView = require './utils/views/launcher-view.jsx'
+StatusView = require './utils/views/status-view.jsx'
 StatsViewer = require './utils/stats-viewer'
-StatusViewer = require './utils/status-viewer'
 PyLprof = require './pylprof/runner'
 
 {CompositeDisposable} = require 'atom'
@@ -35,18 +35,27 @@ statsViewer = new StatsViewer({
 pprofile =
 
   subscriptions : null
-  statusViewer : new StatusViewer()
   showLauncher : false
 
   config : _.extend {}, statsViewer.config, PyLprof.config
 
   activate: (state) ->
-    @launcherview = new LauncherView(
+    @launcherView = new LauncherView(
       show : @showLauncher,
       onRun : @run.bind this
     )
+    atom.workspace.addBottomPanel(
+      item: @launcherView.element
+    )
 
-    atom.workspace.addBottomPanel(item: @launcherview.element)
+    @statusView = new StatusView(
+      show : false
+    )
+
+    atom.workspace.addBottomPanel(
+      item: @statusView.element
+    )
+
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -73,34 +82,36 @@ pprofile =
     self = this
     editor = atom.workspace.getActivePaneItem()
     filename = editor.buffer.file.path
-    @launcherview.update({
+    @launcherView.update({
         status : 'running',
         show : true
     })
     runner = new PyLprof()
     stre = runner.run(cmd)
     .then (data) ->
-      self.statusViewer.show()
-      self.statusViewer.render(
+      self.statusView.update(
+        show : true,
         status : 'success',
         message : data.message
       )
       statsViewer.render editor, self.getFileStats(filename, data.stats)
     .catch (data) ->
-      self.statusViewer.render(
+      self.statusView.update(
+        show : true,
         status : 'error',
         message : data.message
       )
     .finally () ->
-      self.launcherview.update status : 'idle'
+      self.launcherView.update status : 'idle'
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
+    @showLauncher = !@showLauncher
     if @showLauncher
-      @launcherview.update show : false
-      statsViewer.clear(editor)
+      @launcherView.update show : true
+      @statusView.update show : false
     else
-      @launcherview.update show : true
-      @statusViewer.hide()
+      @launcherView.update show : false
+      statsViewer.clear editor
 
 module.exports = pprofile

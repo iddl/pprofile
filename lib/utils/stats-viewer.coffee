@@ -107,7 +107,6 @@ class StatsViewer
     timings = _.pluck(stats, 'timing')
     ext = extent(timings, field.get)
     domain = [ext[0], ext[0]+(ext[1]-ext[0])/2, ext[1]]
-    console.log(domain)
     return scaleLinear().domain(domain).range(range)
 
   addMarkers: (editor, stats) ->
