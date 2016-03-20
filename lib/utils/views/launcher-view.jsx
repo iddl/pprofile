@@ -1,4 +1,4 @@
-'use babel'
+"use babel";
 /** @jsx etch.dom */
 
 import etch from 'etch';
