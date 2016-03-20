@@ -20,7 +20,8 @@
     "atom-space-pen-views" : "*",
     "d3-scale" : "0.6.4",
     "d3-array" : "0.7.1",
-    "coffeelint" : "1.14.2"
+    "coffeelint" : "1.14.2",
+    "etch" : "0.3.0"
   },
   "scripts": {
     "lint": "coffeelint lib/*.coffee spec/*.coffee"

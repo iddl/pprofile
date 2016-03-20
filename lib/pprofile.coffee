@@ -1,7 +1,7 @@
 fs = require 'fs'
 _ = require 'underscore-plus'
 path = require('path')
-LauncherView = require './views/launcher-view'
+LauncherView = require './utils/views/launcher-view.jsx'
 StatsViewer = require './utils/stats-viewer'
 StatusViewer = require './utils/status-viewer'
 PyLprof = require './pylprof/runner'
@@ -36,13 +36,17 @@ pprofile =
 
   subscriptions : null
   statusViewer : new StatusViewer()
+  showLauncher : false
 
   config : _.extend {}, statsViewer.config, PyLprof.config
 
   activate: (state) ->
-    @launcherview = new LauncherView onRunCommand : @run.bind(this)
-    atom.workspace.addBottomPanel(item: @launcherview)
-    @launcherview.hide()
+    @launcherview = new LauncherView(
+      show : @showLauncher,
+      onRun : @run.bind this
+    )
+
+    atom.workspace.addBottomPanel(item: @launcherview.element)
 
     # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
@@ -69,25 +73,34 @@ pprofile =
     self = this
     editor = atom.workspace.getActivePaneItem()
     filename = editor.buffer.file.path
-    @launcherview.props({status : 'running'})
+    @launcherview.update({
+        status : 'running',
+        show : true
+    })
     runner = new PyLprof()
     stre = runner.run(cmd)
     .then (data) ->
       self.statusViewer.show()
-      self.statusViewer.render(status : 'success', message : data.message)
+      self.statusViewer.render(
+        status : 'success',
+        message : data.message
+      )
       statsViewer.render editor, self.getFileStats(filename, data.stats)
     .catch (data) ->
-      self.statusViewer.render({status : 'error', message : data.message})
+      self.statusViewer.render(
+        status : 'error',
+        message : data.message
+      )
     .finally () ->
-      self.launcherview.props({status : 'idle'})
+      self.launcherview.update status : 'idle'
 
   toggle: ->
     editor = atom.workspace.getActivePaneItem()
-    if @launcherview.isVisible()
-      @launcherview.hide()
+    if @showLauncher
+      @launcherview.update show : false
       statsViewer.clear(editor)
     else
-      @launcherview.show()
+      @launcherview.update show : true
       @statusViewer.hide()
 
 module.exports = pprofile
