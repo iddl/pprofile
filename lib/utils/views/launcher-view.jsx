@@ -7,12 +7,19 @@ class LauncherView {
 
   constructor (props) {
     this.props = props;
-    etch.initialize(this)
+    etch.initialize(this);
   }
 
   runClick() {
     var editor = this.refs.editor.getModel();
     this.props.onRun(editor.getText());
+  }
+
+  setGrammar(editor){
+    editor = this.refs.editor.getModel();
+    let grammars = editor.grammarRegistry.grammarsByScopeName;
+    let grammar = grammars[this.props.grammar];
+    editor.setGrammar(grammar);
   }
 
   render () {
@@ -50,7 +57,13 @@ class LauncherView {
   // elaborate logic to save pretty much nothing
   update (props) {
     Object.assign(this.props, props)
-    return etch.update(this);
+    return etch.update(this)
+    .then((d) => {
+        if(this.refs.editor){
+            this.setGrammar(this.refs.editor);
+        }
+        return d;
+    });
   }
 
   async destroy () {
