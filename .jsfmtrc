@@ -1,5 +1,23 @@
 {
     "indent": {
         "value": "    "
+    },
+    "extensions": [
+      "js",
+      "jsx"
+    ],
+    "plugins": [
+        "esformatter-jsx"
+    ],
+    "jsx": {
+        "formatJSX": true,
+        "attrsOnSameLineAsTag": true,
+        "maxAttrsOnTag": 1,
+        "firstAttributeOnSameLine": false,
+        "alignWithFirstAttribute": true,
+        "htmlOptions": {
+            "indent_char": " ",
+            "indent_size": 4
+        }
     }
 }
