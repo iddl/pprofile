@@ -11,19 +11,19 @@ class StatusView {
     }
 
     render() {
-        var props = this.props;
+        let props = this.props;
 
         if (!props.show) {
             return <div></div>;
         }
 
-        var success = props.status === 'success';
-        var title = success ? 'Line profiler - Success ' : 'Line profiler - Error ';
-        var hide = this.update.bind(this, {
+        let success = props.status === 'success';
+        let title = success ? 'Line profiler - Success ' : 'Line profiler - Error ';
+        let hide = this.update.bind(this, {
             show: false
         });
 
-        var message = null;
+        let message = null;
         if (props.message) {
             message = (
                 <div className='tool-panel panel panel-bottom padding script-view native-key-bindings'>

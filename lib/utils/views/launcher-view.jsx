@@ -11,7 +11,7 @@ class LauncherView {
     }
 
     runClick() {
-        var editor = this.refs.editor.getModel();
+        let editor = this.refs.editor.getModel();
         this.props.onRun(editor.getText());
     }
 
@@ -41,13 +41,13 @@ class LauncherView {
     }
 
     render() {
-        var props = this.props;
+        let props = this.props;
 
         if (!props.show) {
             return <div></div>;
         }
 
-        var loaderClass = '';
+        let loaderClass = '';
         if (props.status === 'running') {
             loaderClass = 'loader';
         }
