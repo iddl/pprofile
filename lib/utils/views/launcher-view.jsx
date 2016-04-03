@@ -16,24 +16,37 @@ class LauncherView {
     }
 
     setGrammar(editor) {
-        editor = editor.getModel();
         let grammars = editor.grammarRegistry.grammarsByScopeName;
         let grammar = grammars[this.props.grammar];
         editor.setGrammar(grammar);
         editor.setTabLength(4);
     }
 
+    setDefaultText(editor){
+        if(editor.getText().length){
+            return;
+        }
+
+        editor.setText(this.props.defaultCmd);
+    }
+
+    setupEditor(editor){
+        this.setGrammar(editor);
+        this.setDefaultText(editor);
+    }
+
     // For now simply don't care about doing
     // elaborate logic to save pretty much nothing
     update(props) {
-        Object.assign(this.props, props)
+        Object.assign(this.props, props);
+
         return etch.update(this)
-            .then((d) => {
-                if (this.refs.editor) {
-                    this.setGrammar(this.refs.editor);
-                }
-                return d;
-            });
+        .then((d) => {
+            if (this.refs.editor) {
+                this.setupEditor(this.refs.editor.getModel());
+            }
+            return d;
+        });
     }
 
     async destroy() {
