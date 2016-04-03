@@ -1,21 +1,21 @@
 import json
+import sys
+from collections import defaultdict
+
 stats = lp.get_stats()
 unit = stats.unit
 results = {}
-for function, timings in stats.timings.iteritems():
-    module, line, fname = function
-    results[module] = {}
+for loc, timings in stats.timings.iteritems():
+    module, line, fname = loc
+    if not results.get(module):
+        results[module] = defaultdict(list)
     for sample in timings:
         linenumber, ncalls, timing = sample
-        if not results[module].get(linenumber):
-            results[module][linenumber] = []
         results[module][linenumber].append({
-            'name' : '',
             'timing' : [ncalls, timing*unit, timing*unit*ncalls]
         })
 
-
-jsondump = json.dumps(results)
-print('statsstart' + jsondump + 'statsend')
+statsdump = json.dumps(results)
+print('statsstart{0}statsend'.format(statsdump))
 sys.stdout.flush()
 exit()
