@@ -2,7 +2,7 @@
   "name": "PProfile",
   "main": "./lib/pprofile.js",
   "version": "0.0.0",
-  "description": "A short description of your package",
+  "description": "Python profiling tool",
   "keywords": [],
   "activationCommands": {
     "atom-workspace": "pprofile:toggle"
@@ -14,6 +14,7 @@
   },
   "devDependencies": {
     "esformatter-jsx": "^5.0.0",
+    "esformatter-quotes": "1.0.3",
     "eslint": "2.8.0",
     "jsfmt": "0.5.3"
   },
@@ -25,6 +26,7 @@
     "underscore-plus": "1.6.6"
   },
   "scripts": {
+    "lint": "eslint lib/**.js*",
     "fmt": "jsfmt -w lib/**/*.js*"
   }
 }

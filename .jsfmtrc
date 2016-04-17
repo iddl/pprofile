@@ -3,11 +3,12 @@
         "value": "    "
     },
     "extensions": [
-      "js",
-      "jsx"
+        "js",
+        "jsx"
     ],
     "plugins": [
-        "esformatter-jsx"
+        "esformatter-jsx",
+        "esformatter-quotes"
     ],
     "jsx": {
         "formatJSX": true,
@@ -19,5 +20,9 @@
             "indent_char": " ",
             "indent_size": 4
         }
+    },
+    "quotes": {
+        "type": "single",
+        "avoidEscape": false
     }
 }
