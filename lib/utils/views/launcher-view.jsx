@@ -22,21 +22,14 @@ class LauncherView {
         editor.setTabLength(4);
     }
 
-    setDefaultText(editor){
-        if(editor.getText().length){
-            return;
-        }
-
-        editor.setText(this.props.defaultCmd);
-    }
-
     setupEditor(editor){
         this.setGrammar(editor);
-        this.setDefaultText(editor);
+        editor.buffer.emitter.on('did-change', () => {
+            this.props.onChange(editor.getText())
+        });
+        editor.setText(this.props.content);
     }
 
-    // For now simply don't care about doing
-    // elaborate logic to save pretty much nothing
     update(props) {
         Object.assign(this.props, props);
 
