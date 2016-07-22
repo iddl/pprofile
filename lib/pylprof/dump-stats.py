@@ -2,6 +2,11 @@ import json
 import sys
 from collections import defaultdict
 
+try:
+    lp
+except NameError:
+    exit()
+
 stats = lp.get_stats()
 unit = stats.unit
 results = {}
