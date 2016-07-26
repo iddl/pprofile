@@ -3,9 +3,14 @@
 Able to run py code locally or by ssh channel.
 Parses pstats and displays results in gutter.
 
-
 # Requirements
-* [Python line profiler](https://pypi.python.org/pypi/line_profiler/) -> `pip install line_profiler`
+#### line_profiler fork (for now)
+https://github.com/iddl/line_profiler
+
+```git clone https://github.com/iddl/line_profiler.git
+cd line_profiler
+python setup.py install```
+
 
 # How to run
 1) ALT+SHIFT+P to activate
@@ -13,17 +18,14 @@ Parses pstats and displays results in gutter.
 This will show a snippet similar to the following
 
 ```
-from line_profiler import LineProfiler; lp = LineProfiler()
-# add function (add_function) or module (add_module) to profiler
-lp.add_module(mymodule)
-# call function
-lp.runcall(myfunction, args, kwargs)
+# call function to profile here
+profile(function_to_profile, args, kwargs)
+
 ```
 
-2) Add the module in the profiler scope to record stats (`lp.add_module(modulename)`)
+2) Run the function to profile (`profile(myfunction, args, kwargs)`)
 
-3) Run the function to profile (`lp.runcall(myfunction, args, kwargs)`)
-
+3) Stats will appear in the editor gutter
 
 Experimental
 Use at your own risk.

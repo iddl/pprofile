@@ -1,5 +1,2 @@
-from line_profiler import LineProfiler; lp = LineProfiler()
-# add function (add_function) or module (add_module) to profiler
-lp.add_module(mymodule)
-# call function
-lp.runcall(myfunction, args, kwargs)
+# call function to profile here
+profile(function_to_profile, args, kwargs)
