@@ -1,4 +1,4 @@
-Copyright (c) 2015 Ivan David Di Lernia
+Copyright (c) 2016 Ivan David Di Lernia
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
