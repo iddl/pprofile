@@ -15,13 +15,13 @@
   "devDependencies": {
     "esformatter-jsx": "^5.0.0",
     "esformatter-quotes": "1.0.3",
-    "eslint": "2.8.0",
+    "eslint": "3.1.1",
     "jsfmt": "0.5.3"
   },
   "dependencies": {
-    "d3-scale": "0.6.4",
-    "d3-array": "0.7.1",
-    "etch": "0.3.0",
+    "d3-array": "1.0.0",
+    "d3-scale": "1.0.1",
+    "etch": "0.6.0",
     "q": "1.4.1",
     "underscore-plus": "1.6.6"
   },
