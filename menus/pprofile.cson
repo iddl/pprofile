@@ -9,7 +9,7 @@
   {
     'label': 'Packages'
     'submenu': [
-      'label': 'pprofile'
+      'label': 'PProfile'
       'submenu': [
         {
           'label': 'Toggle'
