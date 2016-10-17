@@ -1,9 +1,12 @@
 {
   "name": "python-line-profiler",
   "main": "./lib/pprofile.js",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Run line-by-line profiles of python code",
-  "keywords": ["profiling", "python"],
+  "keywords": [
+    "profiling",
+    "python"
+  ],
   "activationCommands": {
     "atom-workspace": "pprofile:toggle"
   },
