@@ -1,6 +1,6 @@
 # Python line profiler for Atom
 
-![example](gutter_example.png)
+![example](https://raw.githubusercontent.com/iddl/pprofile/master/gutter_example.png)
 
 # Requirements
 
