@@ -15,7 +15,7 @@
   "devDependencies": {
     "esformatter-jsx": "^5.0.0",
     "esformatter-quotes": "1.0.3",
-    "eslint": "3.1.1",
+    "eslint": "3.8.0",
     "jsfmt": "0.5.3"
   },
   "dependencies": {
