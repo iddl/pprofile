@@ -16,7 +16,7 @@ class LauncherView {
     }
 
     setGrammar(editor) {
-        let grammars = editor.grammarRegistry.grammarsByScopeName;
+        let grammars = atom.grammars.grammarsByScopeName;
         let grammar = grammars[this.props.grammar];
         editor.setGrammar(grammar);
         editor.setTabLength(4);
