@@ -4,25 +4,18 @@
 
 # Requirements
 
-* line_profiler fork (for now)
-https://github.com/iddl/line_profiler
-
+A [line_profiler fork](https://github.com/iddl/line_profiler) is needed to run this extension.
 ```
-git clone https://github.com/iddl/line_profiler.git
-cd line_profiler
-python setup.py install
+pip install https://github.com/iddl/line_profiler/zipball/master
 ```
 
 # How to run
 1) ALT+SHIFT+P to activate
 
-This will show a snippet similar to the following
+This will show an editor with a `Run` button.
 
-```
-# call function to profile here
-profile(function_to_profile, args, kwargs)
-```
+2) Use the `profile` function to run a profile on your code (see screenshot).
 
-2) Run the function to profile (`profile(myfunction, args, kwargs)`)
+Note: you need to import code. The directory containing content opened in the active tab will be selected as cwd.
 
 3) Stats will appear in the editor gutter
