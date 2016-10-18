@@ -1,7 +1,7 @@
 {
   "name": "python-line-profiler",
   "main": "./lib/pprofile.js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Run line-by-line profiles of python code",
   "keywords": [
     "profiling",
