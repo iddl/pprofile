@@ -4,7 +4,9 @@
 
 # Requirements
 
-A [line_profiler fork](https://github.com/iddl/line_profiler) is needed to run this extension.
+* Mac OS, or Linux machine (untested on windows)
+
+* A [line_profiler fork](https://github.com/iddl/line_profiler) is needed to run this extension.
 ```
 pip install https://github.com/iddl/line_profiler/zipball/master
 ```
