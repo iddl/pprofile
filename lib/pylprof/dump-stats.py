@@ -2,6 +2,7 @@ import json
 import sys
 from collections import defaultdict
 
+# test whether startup script ran
 try:
     lp
 except NameError:
@@ -17,7 +18,7 @@ for loc, timings in stats.timings.iteritems():
     for sample in timings:
         linenumber, ncalls, timing = sample
         results[module][linenumber].append({
-            'timing' : [ncalls, timing*unit, timing*unit*ncalls]
+            'timing': [unit, timing, ncalls]
         })
 
 statsdump = json.dumps(results)
