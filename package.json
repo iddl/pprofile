@@ -1,7 +1,7 @@
 {
   "name": "python-line-profiler",
   "main": "./lib/pprofile.js",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Run line-by-line profiles of python code",
   "author": "Ivan David Di Lernia",
   "license": "MIT",
